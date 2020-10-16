@@ -130,6 +130,21 @@ Shopify.prototype.request = function request(uri, method, key, data, headers) {
     options.json = key ? { [key]: data } : data;
   }
 
+  try {
+    console.log('[shopify-api-client][fetch]', {
+      method,
+      url: uri,
+      data:
+        typeof options.json === 'object'
+          ? JSON.stringify(options.json)
+          : undefined
+    });
+  } catch (error) {
+    console.error('[shopify-api-client][error]', 'FAILED TO LOG FETCH', {
+      error
+    });
+  }
+
   return got(uri, options).then(
     (res) => {
       const body = res.body;
@@ -146,6 +161,18 @@ Shopify.prototype.request = function request(uri, method, key, data, headers) {
           if (search) uri.search = search;
 
           return this.request(uri, 'GET', key);
+        });
+      }
+
+      try {
+        console.log('[shopify-api-client][response]', {
+          method,
+          url: uri,
+          response: typeof body === 'object' ? JSON.stringify(body) : undefined
+        });
+      } catch (error) {
+        console.error('[shopify-api-client][error]', 'FAILED TO LOG RESPONSE', {
+          error
         });
       }
 
