@@ -172,12 +172,16 @@ Shopify.prototype.request = function request(uri, method, key, data, headers) {
       try {
         const logObject = {
           method,
-          url: `${uri.protocol}//${uri.hostname}${uri.pathname}`
+          url: `${uri.protocol}//${uri.hostname}${uri.pathname}`,
+          status: res.statusCode
         };
 
         if (process.env.NODE_ENV === 'development') {
           logObject.response =
             typeof body === 'object' ? JSON.stringify(body) : body;
+        } else if (body && body.errors && body.errors.length > 0) {
+          // Example of body response: { errors: [ 'Fulfillment order line item does not exist.' ] }
+          logObject.error = body.errors.join(' & ');
         }
 
         console.log('[shopify-api-client][response]', logObject);
