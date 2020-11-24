@@ -133,7 +133,7 @@ Shopify.prototype.request = function request(uri, method, key, data, headers) {
   try {
     const logObject = {
       method,
-      url: uri
+      url: `${uri.protocol}//${uri.hostname}${uri.pathname}`
     };
 
     if (process.env.NODE_ENV === 'development') {
@@ -172,7 +172,7 @@ Shopify.prototype.request = function request(uri, method, key, data, headers) {
       try {
         const logObject = {
           method,
-          url: uri
+          url: `${uri.protocol}//${uri.hostname}${uri.pathname}`
         };
 
         if (process.env.NODE_ENV === 'development') {
