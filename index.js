@@ -131,14 +131,19 @@ Shopify.prototype.request = function request(uri, method, key, data, headers) {
   }
 
   try {
-    console.log('[shopify-api-client][fetch]', {
+    const logObject = {
       method,
-      url: uri,
-      data:
+      url: uri
+    };
+
+    if (process.env.NODE_ENV === 'development') {
+      logObject.data =
         typeof options.json === 'object'
           ? JSON.stringify(options.json)
-          : undefined
-    });
+          : options.json;
+    }
+
+    console.log('[shopify-api-client][fetch]', logObject);
   } catch (error) {
     console.error('[shopify-api-client][error]', 'FAILED TO LOG FETCH', {
       error
@@ -165,11 +170,17 @@ Shopify.prototype.request = function request(uri, method, key, data, headers) {
       }
 
       try {
-        console.log('[shopify-api-client][response]', {
+        const logObject = {
           method,
-          url: uri,
-          response: typeof body === 'object' ? JSON.stringify(body) : undefined
-        });
+          url: uri
+        };
+
+        if (process.env.NODE_ENV === 'development') {
+          logObject.response =
+            typeof body === 'object' ? JSON.stringify(body) : body;
+        }
+
+        console.log('[shopify-api-client][response]', logObject);
       } catch (error) {
         console.error('[shopify-api-client][error]', 'FAILED TO LOG RESPONSE', {
           error
